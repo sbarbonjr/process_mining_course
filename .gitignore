@@ -1,0 +1,50 @@
+# LaTeX intermediate files
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+
+# Generated laboratory artifacts
+labs/*/outputs/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Markdown files
+*.md
+!README.md
+!**/README.md
+
+# Local AI assistants and agent metadata (not course content)
+/.agents/
+/.codex/
+/AGENTS.md
+/CLAUDE.md
+/GEMINI.md
+/.claude/
+/.cursor/
+/.windsurf/
+/.continue/
+/.github/copilot-instructions.md
+/.aider*
+/aider.chat.history.md
+/aider.input.history
+
+# Local AI conversations, prompts, and generated scratch files
+/ai-notes/
+/ai-output/
+/ai-outputs/
+/ai-prompts/
+/chat-history/
+/prompts/
+/*.chatgpt.*
+/*.claude.*
+/*.codex.*
+/*.copilot.*
+/*.gemini.*
