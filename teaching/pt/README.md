@@ -1,8 +1,6 @@
 # Guia de ensino
 
 Este diretório conecta os seis módulos de slides aos oito laboratórios do curso.
-Os roteiros assumem encontros de 4 horas, com pausas incluídas, e podem ser
-adaptados para aulas de 2 horas dividindo cada módulo em suas duas unidades.
 
 ## Mapa do curso
 
@@ -28,20 +26,6 @@ PDFs são iguais nos dois idiomas.
 6. `labs/06-object-centric-analysis/object_centric_lab.ipynb`
 7. `labs/07-multimodal-event-logs/multimodal_lab.ipynb`
 8. `labs/08-capstone-integration/capstone_lab.ipynb`
-
-## Modelo de avaliação
-
-| Evidência | Frequência | Peso sugerido |
-| --- | ---: | ---: |
-| Exit ticket conceitual | 6 | 10% |
-| Entregas dos Labs 01-07 | 7 | 30% |
-| Revisão por pares | 2 | 10% |
-| Capstone reproduzível | 1 | 35% |
-| Apresentação do capstone | 1 | 15% |
-
-Cada entrega deve ser avaliada por quatro critérios: validade semântica,
-reprodutibilidade, interpretação e adequação da decisão. Executar o código sem
-justificar as escolhas não é evidência suficiente.
 
 ## Preparação comum
 
