@@ -19,7 +19,7 @@
 \newcommand{\coursename}{Mineração de Processos}
 \newcommand{\coursesubtitle}{Dos Dados de Eventos aos Insights de Processo}
 \newcommand{\instructor}{Sylvio Barbon Junior}
-\newcommand{\institution}{Instituição / Programa}
+\newcommand{\institution}{University of Trieste}
 
 % ---------------------------------------------------------------------------
 % Visual language
@@ -134,7 +134,7 @@
         font=\fontsize{24}{28}\selectfont\bfseries]
         at ([xshift=0.23\paperwidth,yshift=0.55cm]current page.west) {#2};
       \node[anchor=west,text=Mist,text width=0.66\paperwidth,font=\large]
-        at ([xshift=0.23\paperwidth,yshift=-1.05cm]current page.west) {#3};
+        at ([xshift=0.23\paperwidth,yshift=-1.5cm]current page.west) {#3};
     \end{tikzpicture}
   \end{frame}
 }
@@ -1284,16 +1284,16 @@ print(precision)
 
 \begin{frame}{Um protocolo de avaliação defensável}
   \centering
-  \begin{tikzpicture}[node distance=0.38cm,scale=0.92,transform shape]
+  \begin{tikzpicture}[node distance=1.5cm,scale=0.92,transform shape]
     \node[activity] (train) {Descoberta\\set};
     \node[activity,right=of train] (valid) {Validação\\set};
     \node[activity,right=of valid] (pareto) {Pré-seleção\\de Pareto};
     \node[activity,right=of pareto] (review) {Revisão\\do domínio};
     \node[activity,right=of review,fill=Gold!35] (test) {Teste\\holdout};
-    \draw[flow] (train)--node[above,font=\scriptsize]{ajustar}(valid);
-    \draw[flow] (valid)--node[above,font=\scriptsize]{selecionar}(pareto);
-    \draw[flow] (pareto)--(review);
-    \draw[accentflow] (review)--node[above,font=\scriptsize]{uma vez}(test);
+    \draw[flow] (train)--node[above,inner sep=3pt,font=\scriptsize]{ajustar}(valid);
+    \draw[flow] (valid)--node[above,inner sep=3pt,font=\scriptsize]{selecionar}(pareto);
+    \draw[flow] (pareto)--node[above,inner sep=3pt,font=\scriptsize]{revisar}(review);
+    \draw[accentflow] (review)--node[above,inner sep=3pt,font=\scriptsize]{uma vez}(test);
   \end{tikzpicture}
   \vspace{0.55cm}
   relatório:
