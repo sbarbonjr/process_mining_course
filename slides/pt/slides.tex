@@ -10,6 +10,7 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{listings}
+\usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,fit,positioning,shapes.geometric}
 
@@ -175,6 +176,13 @@
     \node[event,fill=Paper,text=Ink] (e3) at ([xshift=0.80\paperwidth,yshift=0.45\paperheight]current page.south west) {3};
     \draw[flow,draw=Paper] (e1) -- (e2);
     \draw[flow,draw=Paper] (e2) -- (e3);
+
+    \node[anchor=north east,fill=Paper,inner sep=3pt,rounded corners=2pt]
+      (qr) at ([xshift=-0.35cm,yshift=-0.35cm]current page.north east)
+      {\includegraphics[width=1.9cm]{../../assets/slides/repo-qrcode.png}};
+    \node[anchor=north,font=\tiny,text=Paper,text width=2.3cm,align=center]
+      at ([yshift=-0.1cm]qr.south)
+      {Repositório do curso};
   \end{tikzpicture}
 \end{frame}
 
@@ -198,12 +206,17 @@
   \vspace{0.55cm}
   \keyidea{A mineração de processos conecta \alert{dados} para \alert{processo comportamento}.
   O diagrama não é o resultado; a explicação defensável é.}
+  \vspace{0.3cm}
+  \begin{center}
+    \small\color{SoftGray}Repositório do curso:\quad
+    \href{https://github.com/sbarbonjr/process_mining_course}{\color{Teal}\texttt{github.com/sbarbonjr/process\_mining\_course}}
+  \end{center}
 \end{frame}
 
-\begin{frame}{A jornada de aprendizagem}
+\begin{frame}{O nosso curso}
   \centering
   \begin{tikzpicture}[node distance=0.26cm and 0.26cm,scale=0.92,transform shape]
-    \node[activity,fill=Mist] (a) {Evento\\data};
+    \node[activity,fill=Mist] (a) {Evento\\(Dados)};
     \node[activity,right=of a] (b) {Explorar};
     \node[activity,right=of b] (c) {Modelar};
     \node[activity,right=of c] (d) {Verificação};
@@ -249,14 +262,6 @@
       \textbf{Ferramentas principais}\\
       Python, pandas, PM4Py, Jupyter, Graphviz, Git
     \column{0.43\textwidth}
-      \begin{block}{Avaliação}
-        \begin{tabular}{@{}lr@{}}
-          Laboratórios & 30\%\\
-          Verificações conceituais & 20\%\\
-          Análise do projeto final & 35\%\\
-          Apresentação & 15\%
-        \end{tabular}
-      \end{block}
       \promptbox{Qual processo você encontra toda semana que deixa um rastro digital?}
   \end{columns}
 \end{frame}
@@ -274,10 +279,10 @@
     \column{0.54\textwidth}
       Um processo é composto por:
       \begin{itemize}
-        \item \textbf{casos}: processo instances
-        \item \textbf{atividades}: meaningful steps
-        \item \textbf{eventos}: recorded atividade executions
-        \item \textbf{recursos}: people ou sistemas involved
+        \item \textbf{casos}: instâncias do processo
+        \item \textbf{atividades}: passos do processo
+        \item \textbf{eventos}: execuções gravadas das atividades
+        \item \textbf{recursos}: pessoas ou sistemas envolvidos
         \item \textbf{resultados}: tempo, custo, qualidade, compliance
       \end{itemize}
     \column{0.41\textwidth}
@@ -317,10 +322,10 @@
   \end{tikzpicture}
   \vspace{0.3cm}
   \begin{columns}[T,onlytextwidth]
-    \column{0.23\textwidth}\textbf{Descobrir}\\Revele o comportamento real.
-    \column{0.23\textwidth}\textbf{Verificação}\\compare o log e o modelo.
-    \column{0.23\textwidth}\textbf{Aprimorar}\\Adicione tempo, custo ou decisões.
-    \column{0.23\textwidth}\textbf{Prever}\\Antecipe resultados, atrasos e riscos.
+    \column{0.23\textwidth}\textbf{Discovery}\\Revele o comportamento real.
+    \column{0.23\textwidth}\textbf{Conformance Checking}\\compare o log e o modelo.
+    \column{0.23\textwidth}\textbf{Process Enhancement}\\Adicione tempo, custo ou decisões.
+    \column{0.23\textwidth}\textbf{Predictive Process Monitoring}\\Antecipe resultados, atrasos e riscos.
   \end{columns}
 \end{frame}
 
@@ -329,7 +334,7 @@
     \toprule
     & Análise tradicional & Mineração de processos\\
     \midrule
-    Unidade & Linhas e agregações & Casos e eventos ordenados\\
+    Unidade & Execuções & Casos e eventos ordenados\\
     Pergunta & Quantos? & Como o trabalho se desenvolveu?\\
     Estrutura & Geralmente tabular & Sequencial, concorrente, cíclico\\
     Saída & KPI ou predição & Comportamento, desvio, desempenho\\
@@ -337,20 +342,20 @@
     \bottomrule
   \end{tabular}
   \vspace{0.5cm}
-  \promptbox{Um KPI de entrega piorou. Que perguntas sobre a sequência você faria antes de recomendar uma mudança?}
+  \promptbox{Um Key Performance Indicator (KPI) de entrega piorou. Que perguntas sobre a sequência você faria antes de recomendar uma mudança?}
 \end{frame}
 
 \begin{frame}{Estruture uma análise útil}
   \begin{enumerate}
-    \item \textbf{decisão}: Que decisão esta análise deve apoiar?
+    \item \textbf{Decisão}: Que decisão esta análise deve apoiar?
     \item \textbf{Escopo}: Onde o processo começa e termina?
     \item \textbf{Caso}: O que constitui uma instância do processo?
     \item \textbf{Evidência}: Quais sistemas registram os eventos relevantes?
-    \item \textbf{Success}: Qual comportamento ou resultado deve mudar?
+    \item \textbf{Successo}: Qual comportamento ou resultado deve mudar?
   \end{enumerate}
   \vspace{0.35cm}
   \begin{block}{Exemplo}
-    ``Por que alguns pedidos estão atrasados?'' becomes: ``Quais caminhos, transferências e períodos de espera distinguem os pedidos entregues após a meta de cinco dias?''
+    ``Por que alguns pedidos estão atrasados?'' com PM: ``Quais caminhos, transferências e períodos de espera distinguem os pedidos entregues após a meta de cinco dias?''
   \end{block}
 \end{frame}
 
@@ -366,7 +371,7 @@
   \small
   \begin{tabular}{@{}lllll@{}}
     \toprule
-    Caso & Atividade & dados/hora & Recurso & Valor\\
+    Caso & Atividade & Data (hora) & Recurso & Valor\\
     \midrule
     O-17 & Receber pedido & 09:02 & Portal & 480\\
     O-17 & Verificar crédito & 09:16 & Elena & 480\\
@@ -383,7 +388,7 @@
     \column{0.31\textwidth}
       \textbf{Atividade}\\Nomeia o que aconteceu.
     \column{0.31\textwidth}
-      \textbf{dados/hora}\\Ordena os eventos no tempo.
+      \textbf{Data (timestamp)}\\Ordena os eventos no tempo.
   \end{columns}
   \vspace{0.35cm}
   \keyidea{Recursos, custos, estados do ciclo de vida e atributos de negócio enriquecem a análise, mas não corrigem uma noção de caso incoerente.}
@@ -426,7 +431,7 @@
       \begin{tikzpicture}[x=1.15cm,y=1cm]
         \draw[very thick,Ink] (0,0)--(5.4,0);
         \foreach \x/\lab/\col in {
-          0.5/start/Teal,2.0/suspend/Gold,3.0/resume/Coral,4.8/complete/Ink}
+          0.5/iniciar/Teal,2.0/suspender/Gold,3.0/retomar/Coral,4.8/concluir/Ink}
           {
             \fill[\col] (\x,0) circle (3pt);
             \node[above,font=\scriptsize] at (\x,0.08) {\lab};
@@ -469,7 +474,7 @@ events = pm4py.format_dataframe(
 pm4py.write_xes(events, "orders.xes")
 \end{lstlisting}
   \vspace{0.15cm}
-  \textbf{Antes de executar a descoberta:} verifique identificadores, datas/horas, ordenação, duplicatas e o significado dos eventos.
+  \textbf{Antes de executar a descoberta:} verifique identificadores, timestamp, ordenação, duplicatas e o significado dos eventos.
 \end{frame}
 
 % ===========================================================================
@@ -614,6 +619,40 @@ pm4py.write_xes(events, "orders.xes")
   \end{columns}
   \vspace{0.35cm}
   \promptbox{Qual noção de caso preserva o comportamento necessário à sua pergunta e quais frequências ela distorce?}
+\end{frame}
+
+\begin{frame}{Flattening e encoding: duas camadas, duas decisões}
+  \centering
+  \begin{tikzpicture}[node distance=0.4cm and 0.7cm,scale=0.9,transform shape]
+    \node[activity,fill=Mist,minimum width=3.1cm] (raw) {Log centrado\\em objetos};
+    \node[activity,right=of raw,fill=Gold!35,minimum width=2.6cm] (flat) {Flattening};
+    \node[activity,right=of flat,minimum width=2.6cm] (cases) {Traces baseados\\em casos};
+    \node[activity,right=of cases,fill=Gold!35,minimum width=2.6cm] (enc) {Encoding\\do trace};
+    \node[activity,right=of enc,minimum width=2.2cm] (var) {Variantes};
+    \draw[accentflow] (raw)--(flat);
+    \draw[flow] (flat)--(cases);
+    \draw[accentflow] (cases)--(enc);
+    \draw[flow] (enc)--(var);
+  \end{tikzpicture}
+  \vspace{0.45cm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \begin{block}{Flattening}
+        Decide \textbf{quais eventos pertencem ao mesmo caso}. Mais amplo,
+        anterior: escolhe a noção de caso (pedido, item, remessa\ldots) e
+        cria convergência ou divergência antes de qualquer trace existir.
+      \end{block}
+    \column{0.47\textwidth}
+      \begin{block}{Encoding}
+        Decide \textbf{como um caso já definido é representado} como
+        trace: fluxo de controle, ciclo de vida, tempo ou payload. Mais
+        fino, posterior: molda as variantes depois que os casos já existem.
+      \end{block}
+  \end{columns}
+  \vspace{0.3cm}
+  \keyidea{Ambas são escolhas de modelagem, não padrões neutros: o
+  flattening fixa o que conta como um caso; o encoding fixa como o
+  histórico desse caso é lido.}
 \end{frame}
 
 % ===========================================================================
@@ -893,20 +932,77 @@ filtered = pm4py.filter_case_performance(
   Esse comportamento nunca foi observado.
 \end{frame}
 
-\begin{frame}{Representações de modelos}
-  \small
-  \begin{tabular}{@{}p{0.20\textwidth}p{0.30\textwidth}p{0.40\textwidth}@{}}
-    \toprule
-    Representação & Ponto forte & Atenção a\\
-    \midrule
-    DFG & Visão geral rápida e legível & Sem semântica completa de execução\\
-    Árvore de processos & Estruturada e sound por construção & Restringe a forma do modelo\\
-    Rede de Petri & Concorrência e replay precisos & Mais difícil para não especialistas\\
-    BPMN & Notação de negócio familiar & A semântica varia conforme o uso\\
-    Transition sistema & Comportamento baseado em estados & Explosão de estados\\
-    \bottomrule
-  \end{tabular}
-  \vspace{0.5cm}
+\begin{frame}[shrink=8]{Representações de modelos}
+  \centering
+  \begin{columns}[T,onlytextwidth]
+    \column{0.24\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape,node distance=0.4cm and 0.55cm]
+        \node[activity,fill=Mist] (a) {A};
+        \node[activity,right=of a] (b) {B};
+        \node[activity,above right=0.3cm and 0.5cm of b] (c) {C};
+        \node[activity,below right=0.3cm and 0.5cm of b] (d) {D};
+        \draw[flow] (a)--(b);
+        \draw[flow] (b)--(c);
+        \draw[flow] (b)--(d);
+        \draw[flow] (d)--(b);
+      \end{tikzpicture}
+      \textbf{DFG}\\[0.15cm]
+      \textit{Ponto forte:} visão geral rápida e legível\\
+      \textit{Atenção a:} sem semântica completa de execução
+    \column{0.24\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape,
+          level distance=0.9cm,sibling distance=1.5cm,
+          every node/.style={font=\scriptsize}]
+        \node[event,fill=Teal] {$\rightarrow$}
+          child { node[activity] {A} }
+          child { node[event,fill=Gold,text=Ink] {$\times$}
+            child { node[activity] {B} }
+            child { node[activity] {C} }
+          };
+      \end{tikzpicture}
+      \textbf{Árvore de processos}\\[0.15cm]
+      \textit{Ponto forte:} estruturada e sound por construção\\
+      \textit{Atenção a:} restringe a forma do modelo
+    \column{0.24\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape,
+          place/.style={circle,draw=Ink,thick,minimum size=0.5cm},
+          trans/.style={rectangle,draw=Ink,thick,fill=Teal,
+            minimum width=0.4cm,minimum height=0.55cm},
+          node distance=0.55cm]
+        \node[place] (p0) {};
+        \fill (p0) circle (2.2pt);
+        \node[trans,right=of p0] (t1) {\tiny A};
+        \node[place,right=of t1] (p1) {};
+        \node[trans,right=of p1] (t2) {\tiny B};
+        \node[place,right=of t2] (p2) {};
+        \draw[flow] (p0)--(t1); \draw[flow] (t1)--(p1);
+        \draw[flow] (p1)--(t2); \draw[flow] (t2)--(p2);
+      \end{tikzpicture}
+      \textbf{Rede de Petri}\\[0.15cm]
+      \textit{Ponto forte:} concorrência e replay precisos\\
+      \textit{Atenção a:} mais difícil para não especialistas
+    \column{0.24\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape,node distance=0.45cm]
+        \node[event,fill=Teal] (s) {};
+        \node[activity,right=of s] (a) {A};
+        \node[shape=diamond,draw=Ink,thick,fill=Gold!35,
+          minimum size=0.5cm,right=of a,inner sep=0pt] (g) {\tiny X};
+        \node[activity,above right=0.3cm and 0.5cm of g] (b) {B};
+        \node[activity,below right=0.3cm and 0.5cm of g] (c) {C};
+        \node[event,fill=Coral,right=1.1cm of g] (e) {};
+        \draw[flow] (s)--(a); \draw[flow] (a)--(g);
+        \draw[flow] (g)--(b); \draw[flow] (g)--(c);
+        \draw[flow] (b)--(e); \draw[flow] (c)--(e);
+      \end{tikzpicture}
+      \textbf{BPMN}\\[0.15cm]
+      \textit{Ponto forte:} notação de negócio familiar\\
+      \textit{Atenção a:} a semântica varia conforme o uso
+  \end{columns}
+  \vspace{0.4cm}
   \promptbox{Qual representação você usaria para discutir com stakeholders? E para verificação de conformidade baseada em alinhamentos?}
 \end{frame}
 
@@ -2073,13 +2169,57 @@ pm4py.save_vis_ocdfg(ocdfg, "object_centric.svg")
     \fill[DeepInk] (current page.south west) rectangle (current page.north east);
     \fill[Coral] (current page.south west) rectangle
       ([yshift=0.13\paperheight]current page.south east);
-    \node[text=Paper,font=\fontsize{31}{34}\selectfont\bfseries]
+    \node[text=Paper,font=\fontsize{20}{25}\selectfont\bfseries]
       at ([yshift=0.55cm]current page.center) {Perguntas tornam-se evidências.};
     \node[text=Mist,font=\Large]
       at ([yshift=-0.75cm]current page.center) {Evidências tornam-se melhores decisões de processo.};
     \node[text=Paper,font=\small]
       at ([yshift=0.065\paperheight]current page.south) {\coursename\quad|\quad\instructor};
   \end{tikzpicture}
+\end{frame}
+
+% ===========================================================================
+% Referências
+% ===========================================================================
+\section{Referências}
+
+\begin{frame}{Referências — livro-texto principal}
+  \begin{block}{Referência principal}
+    van der Aalst, W.M.P. (2016). \textit{Process Mining: Data Science in
+    Action} (2\textsuperscript{a} ed.). Springer.
+  \end{block}
+  \vspace{0.4cm}
+  Este livro-texto, escrito pelo fundador da área de mineração de
+  processos, é a referência principal para os conceitos abordados ao
+  longo do curso: semântica do log de eventos, descoberta de processos,
+  verificação de conformidade e aprimoramento de processos.
+\end{frame}
+
+\begin{frame}[shrink=8]{Referências — artigos selecionados}
+  \small
+  \begin{enumerate}
+    \item de Alvarenga, S.C., Barbon Jr., S., Miani, R.S., Cukier, M.,
+      Zarpelão, B.B. (2018). Process mining and hierarchical clustering to
+      help intrusion alert visualization. \textit{Computers \& Security},
+      73, 474--491.
+      \url{https://www.sciencedirect.com/science/article/pii/S0167404817302584}
+
+    \item Ceravolo, P., Tavares, G.M., Barbon Jr., S., Damiani, E. (2020).
+      Evaluation Goals for Online Process Mining: A Concept Drift
+      Perspective. \textit{IEEE Transactions on Services Computing}.
+      \url{https://ieeexplore.ieee.org/abstract/document/9124702}
+
+    \item Tavares, G.M., Oyamada, R.S., Barbon Jr., S., Ceravolo, P.
+      (2023). Trace encoding in process mining: A survey and benchmarking.
+      \textit{Engineering Applications of Artificial Intelligence}, 126,
+      107028.
+      \url{https://www.sciencedirect.com/science/article/pii/S0952197623012125}
+
+    \item da Silva, M.C., Tavares, G.M., Gritti, M.C., Ceravolo, P.
+      (2023). Using Process Mining to Reduce Fraud in Digital Onboarding.
+      \textit{FinTech}, 2(1), 120--137.
+      \url{https://www.mdpi.com/2674-1032/2/1/9}
+  \end{enumerate}
 \end{frame}
 
 \end{document}

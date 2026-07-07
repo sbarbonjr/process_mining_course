@@ -10,6 +10,7 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{listings}
+\usepackage{graphicx}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,fit,positioning,shapes.geometric}
 
@@ -175,6 +176,13 @@
     \node[event,fill=Paper,text=Ink] (e3) at ([xshift=0.80\paperwidth,yshift=0.45\paperheight]current page.south west) {3};
     \draw[flow,draw=Paper] (e1) -- (e2);
     \draw[flow,draw=Paper] (e2) -- (e3);
+
+    \node[anchor=north east,fill=Paper,inner sep=3pt,rounded corners=2pt]
+      (qr) at ([xshift=-0.35cm,yshift=-0.35cm]current page.north east)
+      {\includegraphics[width=1.9cm]{../../assets/slides/repo-qrcode.png}};
+    \node[anchor=north,font=\tiny,text=Paper,text width=2.3cm,align=center]
+      at ([yshift=-0.1cm]qr.south)
+      {Course repository};
   \end{tikzpicture}
 \end{frame}
 
@@ -198,6 +206,11 @@
   \vspace{0.55cm}
   \keyidea{Process mining connects \alert{data} to \alert{process behavior}.
   The diagram is not the result; the defensible explanation is.}
+  \vspace{0.3cm}
+  \begin{center}
+    \small\color{SoftGray}Course repository:\quad
+    \href{https://github.com/sbarbonjr/process_mining_course}{\color{Teal}\texttt{github.com/sbarbonjr/process\_mining\_course}}
+  \end{center}
 \end{frame}
 
 \begin{frame}{The learning journey}
@@ -626,6 +639,40 @@ pm4py.write_xes(events, "orders.xes")
   and which frequencies does it distort?}
 \end{frame}
 
+\begin{frame}{Flattening and encoding: two layers, two decisions}
+  \centering
+  \begin{tikzpicture}[node distance=0.5cm and 0.9cm,scale=0.9,transform shape]
+    \node[activity,fill=Mist,minimum width=3.1cm] (raw) {Object-centric\\event log};
+    \node[activity,right=of raw,fill=Gold!35,minimum width=2.6cm] (flat) {Flattening};
+    \node[activity,right=of flat,minimum width=2.6cm] (cases) {Case-based\\traces};
+    \node[activity,right=of cases,fill=Gold!35,minimum width=2.6cm] (enc) {Trace\\encoding};
+    \node[activity,right=of enc,minimum width=2.2cm] (var) {Variants};
+    \draw[accentflow] (raw)--(flat);
+    \draw[flow] (flat)--(cases);
+    \draw[accentflow] (cases)--(enc);
+    \draw[flow] (enc)--(var);
+  \end{tikzpicture}
+  \vspace{0.45cm}
+  \begin{columns}[T,onlytextwidth]
+    \column{0.47\textwidth}
+      \begin{block}{Flattening}
+        Decides \textbf{which events belong to the same case}. Coarser,
+        earlier: it chooses the case notion (order, item, shipment\ldots)
+        and creates convergence or divergence before any trace exists.
+      \end{block}
+    \column{0.47\textwidth}
+      \begin{block}{Encoding}
+        Decides \textbf{how an already-defined case is represented} as a
+        trace: control-flow, lifecycle, time, or payload. Finer, later: it
+        shapes variants once cases already exist.
+      \end{block}
+  \end{columns}
+  \vspace{0.3cm}
+  \keyidea{Both are modeling choices, not neutral defaults: flattening
+  fixes what counts as one case, encoding fixes how that case's history is
+  read.}
+\end{frame}
+
 % ===========================================================================
 % Unit 4
 % ===========================================================================
@@ -910,20 +957,77 @@ filtered = pm4py.filter_case_performance(
   That behavior was never observed.
 \end{frame}
 
-\begin{frame}{Model representations}
-  \small
-  \begin{tabular}{@{}p{0.20\textwidth}p{0.30\textwidth}p{0.40\textwidth}@{}}
-    \toprule
-    Representation & Strength & Watch for\\
-    \midrule
-    DFG & Fast, readable overview & No complete execution semantics\\
-    Process tree & Structured, sound by construction & Restricts model shape\\
-    Petri net & Precise concurrency and replay & Harder for non-specialists\\
-    BPMN & Familiar business notation & Semantics vary by usage\\
-    Transition system & State-based behavior & State explosion\\
-    \bottomrule
-  \end{tabular}
-  \vspace{0.5cm}
+\begin{frame}[shrink=8]{Model representations}
+  \centering
+  \begin{columns}[T,onlytextwidth]
+    \column{0.24\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape,node distance=0.4cm and 0.55cm]
+        \node[activity,fill=Mist] (a) {A};
+        \node[activity,right=of a] (b) {B};
+        \node[activity,above right=0.3cm and 0.5cm of b] (c) {C};
+        \node[activity,below right=0.3cm and 0.5cm of b] (d) {D};
+        \draw[flow] (a)--(b);
+        \draw[flow] (b)--(c);
+        \draw[flow] (b)--(d);
+        \draw[flow] (d)--(b);
+      \end{tikzpicture}
+      \textbf{DFG}\\[0.15cm]
+      \textit{Strength:} fast, readable overview\\
+      \textit{Watch for:} no complete execution semantics
+    \column{0.24\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape,
+          level distance=0.9cm,sibling distance=1.5cm,
+          every node/.style={font=\scriptsize}]
+        \node[event,fill=Teal] {$\rightarrow$}
+          child { node[activity] {A} }
+          child { node[event,fill=Gold,text=Ink] {$\times$}
+            child { node[activity] {B} }
+            child { node[activity] {C} }
+          };
+      \end{tikzpicture}
+      \textbf{Process tree}\\[0.15cm]
+      \textit{Strength:} structured, sound by construction\\
+      \textit{Watch for:} restricts model shape
+    \column{0.24\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape,
+          place/.style={circle,draw=Ink,thick,minimum size=0.5cm},
+          trans/.style={rectangle,draw=Ink,thick,fill=Teal,
+            minimum width=0.4cm,minimum height=0.55cm},
+          node distance=0.55cm]
+        \node[place] (p0) {};
+        \fill (p0) circle (2.2pt);
+        \node[trans,right=of p0] (t1) {\tiny A};
+        \node[place,right=of t1] (p1) {};
+        \node[trans,right=of p1] (t2) {\tiny B};
+        \node[place,right=of t2] (p2) {};
+        \draw[flow] (p0)--(t1); \draw[flow] (t1)--(p1);
+        \draw[flow] (p1)--(t2); \draw[flow] (t2)--(p2);
+      \end{tikzpicture}
+      \textbf{Petri net}\\[0.15cm]
+      \textit{Strength:} precise concurrency and replay\\
+      \textit{Watch for:} harder for non-specialists
+    \column{0.24\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.62,transform shape,node distance=0.45cm]
+        \node[event,fill=Teal] (s) {};
+        \node[activity,right=of s] (a) {A};
+        \node[shape=diamond,draw=Ink,thick,fill=Gold!35,
+          minimum size=0.5cm,right=of a,inner sep=0pt] (g) {\tiny X};
+        \node[activity,above right=0.3cm and 0.5cm of g] (b) {B};
+        \node[activity,below right=0.3cm and 0.5cm of g] (c) {C};
+        \node[event,fill=Coral,right=1.1cm of g] (e) {};
+        \draw[flow] (s)--(a); \draw[flow] (a)--(g);
+        \draw[flow] (g)--(b); \draw[flow] (g)--(c);
+        \draw[flow] (b)--(e); \draw[flow] (c)--(e);
+      \end{tikzpicture}
+      \textbf{BPMN}\\[0.15cm]
+      \textit{Strength:} familiar business notation\\
+      \textit{Watch for:} semantics vary by usage
+  \end{columns}
+  \vspace{0.4cm}
   \promptbox{Which representation would you use for stakeholder discussion?
   Which for alignment-based conformance checking?}
 \end{frame}
@@ -2142,6 +2246,50 @@ pm4py.save_vis_ocdfg(ocdfg, "object_centric.svg")
     \node[text=Paper,font=\small]
       at ([yshift=0.065\paperheight]current page.south) {\coursename\quad|\quad\instructor};
   \end{tikzpicture}
+\end{frame}
+
+% ===========================================================================
+% References
+% ===========================================================================
+\section{References}
+
+\begin{frame}{References — core textbook}
+  \begin{block}{Main reference}
+    van der Aalst, W.M.P. (2016). \textit{Process Mining: Data Science in
+    Action} (2nd ed.). Springer.
+  \end{block}
+  \vspace{0.4cm}
+  This textbook, by the founder of the process mining field, is the primary
+  reference for the concepts covered throughout the course: event log
+  semantics, process discovery, conformance checking, and process
+  enhancement.
+\end{frame}
+
+\begin{frame}[shrink=8]{References — selected articles}
+  \small
+  \begin{enumerate}
+    \item de Alvarenga, S.C., Barbon Jr., S., Miani, R.S., Cukier, M.,
+      Zarpelão, B.B. (2018). Process mining and hierarchical clustering to
+      help intrusion alert visualization. \textit{Computers \& Security},
+      73, 474--491.
+      \url{https://www.sciencedirect.com/science/article/pii/S0167404817302584}
+
+    \item Ceravolo, P., Tavares, G.M., Barbon Jr., S., Damiani, E. (2020).
+      Evaluation Goals for Online Process Mining: A Concept Drift
+      Perspective. \textit{IEEE Transactions on Services Computing}.
+      \url{https://ieeexplore.ieee.org/abstract/document/9124702}
+
+    \item Tavares, G.M., Oyamada, R.S., Barbon Jr., S., Ceravolo, P.
+      (2023). Trace encoding in process mining: A survey and benchmarking.
+      \textit{Engineering Applications of Artificial Intelligence}, 126,
+      107028.
+      \url{https://www.sciencedirect.com/science/article/pii/S0952197623012125}
+
+    \item da Silva, M.C., Tavares, G.M., Gritti, M.C., Ceravolo, P.
+      (2023). Using Process Mining to Reduce Fraud in Digital Onboarding.
+      \textit{FinTech}, 2(1), 120--137.
+      \url{https://www.mdpi.com/2674-1032/2/1/9}
+  \end{enumerate}
 \end{frame}
 
 \end{document}

@@ -104,6 +104,38 @@ def discover_candidates(events: pd.DataFrame) -> pd.DataFrame:
     return frame
 
 
+def discover_edge_sets(events: pd.DataFrame) -> dict[float, set[tuple[str, str]]]:
+    """Directly-follows edges kept at each frequency threshold.
+
+    Mirrors the train split and thresholds used by ``discover_candidates`` so
+    the same candidate models can be rendered as process diagrams (e.g. with
+    PM4Py) without duplicating the scoring logic.
+    """
+    cases = (
+        events.groupby("case_id", as_index=False)["timestamp"]
+        .min()
+        .sort_values("timestamp")
+        .reset_index(drop=True)
+    )
+    split = int(len(cases) * 0.65)
+    train_ids = set(cases.iloc[:split]["case_id"])
+    train = {
+        key: value
+        for key, value in completed_traces(events).items()
+        if key in train_ids
+    }
+    train_edges = directly_follows_counts(train)
+    max_count = max(train_edges.values())
+    return {
+        threshold_share: {
+            edge
+            for edge, count in train_edges.items()
+            if count >= max(1, int(np.ceil(max_count * threshold_share)))
+        }
+        for threshold_share in (0.00, 0.03, 0.08, 0.15, 0.25)
+    }
+
+
 def pareto_mask(frame: pd.DataFrame, objectives: tuple[str, ...]) -> np.ndarray:
     values = frame.loc[:, objectives].to_numpy(float)
     keep = np.ones(len(values), dtype=bool)
